@@ -178,25 +178,28 @@ class RectObj extends React.PureComponent {
           if (r2.x < r1.x + r1.width) {
             // If right of target is greater than left of sibling
             // and left of target is less than right of sibling
-            // if (prevX + r2.width > r1.x || prevX < r1.x + r1.width) {
-            //   console.log('GOT HERE')
-            //   currTargetCoords.y = r1.y + r1.height // og
-            // } else if (prevX + r2.width <= r1.x || prevX >= r1.x + r1.width) {
-            // Slide along side of sibling
-            console.log('WHY ARE WE HERE')
             if (
-              Math.floor(r1.x) <= Math.floor(prevX + r2.width) &&
-              Math.floor(prevX + r2.width) < Math.floor(r1.x + r1.width / 2)
-              // Math.floor(r1.x) === Math.floor(prevX + r2.width)
+              (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
+              (prevX > r1.x && prevX < r1.x + r1.width)
             ) {
-              currTargetCoords.x = r1.x - r2.width
-            } else if (
-              Math.floor(r1.x + r1.width / 2) <= Math.floor(prevX) &&
-              Math.floor(prevX) <= Math.floor(r1.x + r1.width)
-            ) {
-              currTargetCoords.x = r1.x + r1.width
+              console.log('GOT HERE')
+              currTargetCoords.y = r1.y + r1.height // og
+            } else if (prevX + r2.width <= r1.x || prevX >= r1.x + r1.width) {
+              console.log(prevX + r2.width, ' : ', r1.x, ' || ', prevX, ' : ', r1.x + r1.width)
+              // Slide along side of sibling
+              if (
+                Math.floor(r1.x) <= Math.floor(prevX + r2.width) &&
+                Math.floor(prevX + r2.width) < Math.floor(r1.x + r1.width / 2)
+                // Math.floor(r1.x) === Math.floor(prevX + r2.width)
+              ) {
+                currTargetCoords.x = r1.x - r2.width
+              } else if (
+                Math.floor(r1.x + r1.width / 2) <= Math.floor(prevX) &&
+                Math.floor(prevX) <= Math.floor(r1.x + r1.width)
+              ) {
+                currTargetCoords.x = r1.x + r1.width
+              }
             }
-            // }
           }
         }
       }
@@ -210,25 +213,27 @@ class RectObj extends React.PureComponent {
         if (r2.x + r2.width > r1.x) {
           // If left of target is less than right of sibling
           if (r2.x < r1.x + r1.width) {
-            // if (prevX + r2.width > r1.x || prevX < r1.x + r1.width) {
-            //   console.log('GOT HERE')
-            //   // currTargetCoords.y = r1.y + r1.height // og
-            //   currTargetCoords.y = r1.y - r2.height // og
-            // } else if (prevX + r2.width <= r1.x || prevX >= r1.x + r1.width) {
-            // Slide along side
             if (
-              Math.floor(r1.x) <= Math.floor(prevX + r2.width) &&
-              Math.floor(prevX + r2.width) < Math.floor(r1.x + r1.width / 2)
-              // Math.floor(r1.x) === Math.floor(prevX + r2.width)
+              (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
+              (prevX > r1.x && prevX < r1.x + r1.width)
             ) {
-              currTargetCoords.x = r1.x - r2.width
-            } else if (
-              Math.floor(r1.x + r1.width / 2) <= Math.floor(prevX) &&
-              Math.floor(prevX) <= Math.floor(r1.x + r1.width)
-            ) {
-              currTargetCoords.x = r1.x + r1.width
+              // currTargetCoords.y = r1.y + r1.height // og
+              currTargetCoords.y = r1.y - r2.height // og
+            } else if (prevX + r2.width <= r1.x || prevX >= r1.x + r1.width) {
+              // Slide along side
+              if (
+                Math.floor(r1.x) <= Math.floor(prevX + r2.width) &&
+                Math.floor(prevX + r2.width) < Math.floor(r1.x + r1.width / 2)
+                // Math.floor(r1.x) === Math.floor(prevX + r2.width)
+              ) {
+                currTargetCoords.x = r1.x - r2.width
+              } else if (
+                Math.floor(r1.x + r1.width / 2) <= Math.floor(prevX) &&
+                Math.floor(prevX) <= Math.floor(r1.x + r1.width)
+              ) {
+                currTargetCoords.x = r1.x + r1.width
+              }
             }
-            // }
           }
         }
       }
