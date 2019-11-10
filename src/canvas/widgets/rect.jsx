@@ -117,7 +117,26 @@ class RectObj extends React.PureComponent {
         if (r2.y + r2.height > r1.y) {
           // And if top of target is less than bottom of sibling
           if (r2.y < r1.y + r1.height) {
-            currTargetCoords.x = r1.x + r1.width
+            if (
+              (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
+              (prevY > r1.y && prevY < r1.y + r1.height)
+            ) {
+              currTargetCoords.x = r1.x + r1.width
+            } else if (prevY + r2.height <= r1.y || prevY >= r1.y + r1.height) {
+              // Slide along side of sibling
+              if (
+                Math.floor(r1.y) <= Math.floor(prevY + r2.height) &&
+                Math.floor(prevY + r2.height) < Math.floor(r1.y + r1.height / 2)
+                // Math.floor(r1.x) === Math.floor(prevY + r2.width)
+              ) {
+                currTargetCoords.y = r1.y - r2.height
+              } else if (
+                Math.floor(r1.y + r1.height / 2) <= Math.floor(prevY) &&
+                Math.floor(prevY) <= Math.floor(r1.y + r1.height)
+              ) {
+                currTargetCoords.y = r1.y + r1.height
+              }
+            }
           }
         }
       }
@@ -132,7 +151,26 @@ class RectObj extends React.PureComponent {
         if (r2.y + r2.height > r1.y) {
           // And if top of target is less than bottom of sibling
           if (r2.y < r1.y + r1.height) {
-            currTargetCoords.x = r1.x - r2.width
+            if (
+              (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
+              (prevY > r1.y && prevY < r1.y + r1.height)
+            ) {
+              currTargetCoords.x = r1.x - r2.width
+            } else if (prevY + r2.height <= r1.y || prevY >= r1.y + r1.height) {
+              // Slide along side of sibling
+              if (
+                Math.floor(r1.y) <= Math.floor(prevY + r2.height) &&
+                Math.floor(prevY + r2.height) < Math.floor(r1.y + r1.height / 2)
+                // Math.floor(r1.x) === Math.floor(prevY + r2.width)
+              ) {
+                currTargetCoords.y = r1.y - r2.height
+              } else if (
+                Math.floor(r1.y + r1.height / 2) <= Math.floor(prevY) &&
+                Math.floor(prevY) <= Math.floor(r1.y + r1.height)
+              ) {
+                currTargetCoords.y = r1.y + r1.height
+              }
+            }
           }
         }
       }
@@ -150,7 +188,26 @@ class RectObj extends React.PureComponent {
         if (r2.y + r2.height > r1.y) {
           // And if top of target is less than bottom of sibling
           if (r2.y < r1.y + r1.height) {
-            currTargetCoords.x = r1.x - r2.width
+            if (
+              (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
+              (prevY > r1.y && prevY < r1.y + r1.height)
+            ) {
+              currTargetCoords.x = r1.x - r2.width
+            } else if (prevY + r2.height <= r1.y || prevY >= r1.y + r1.height) {
+              // Slide along side of sibling
+              if (
+                Math.floor(r1.y) <= Math.floor(prevY + r2.height) &&
+                Math.floor(prevY + r2.height) < Math.floor(r1.y + r1.height / 2)
+                // Math.floor(r1.x) === Math.floor(prevY + r2.width)
+              ) {
+                currTargetCoords.y = r1.y - r2.height
+              } else if (
+                Math.floor(r1.y + r1.height / 2) <= Math.floor(prevY) &&
+                Math.floor(prevY) <= Math.floor(r1.y + r1.height)
+              ) {
+                currTargetCoords.y = r1.y + r1.height
+              }
+            }
           }
         }
       }
@@ -160,7 +217,26 @@ class RectObj extends React.PureComponent {
         if (r2.y + r2.height > r1.y) {
           // And if top of target is less than bottom of sibling
           if (r2.y < r1.y + r1.height) {
-            currTargetCoords.x = r1.x + r1.width
+            if (
+              (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
+              (prevY > r1.y && prevY < r1.y + r1.height)
+            ) {
+              currTargetCoords.x = r1.x + r1.width
+            } else if (prevY + r2.height <= r1.y || prevY >= r1.y + r1.height) {
+              // Slide along side of sibling
+              if (
+                Math.floor(r1.y) <= Math.floor(prevY + r2.height) &&
+                Math.floor(prevY + r2.height) < Math.floor(r1.y + r1.height / 2)
+                // Math.floor(r1.x) === Math.floor(prevY + r2.width)
+              ) {
+                currTargetCoords.y = r1.y - r2.height
+              } else if (
+                Math.floor(r1.y + r1.height / 2) <= Math.floor(prevY) &&
+                Math.floor(prevY) <= Math.floor(r1.y + r1.height)
+              ) {
+                currTargetCoords.y = r1.y + r1.height
+              }
+            }
           }
         }
       }
@@ -182,10 +258,8 @@ class RectObj extends React.PureComponent {
               (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
               (prevX > r1.x && prevX < r1.x + r1.width)
             ) {
-              console.log('GOT HERE')
               currTargetCoords.y = r1.y + r1.height // og
             } else if (prevX + r2.width <= r1.x || prevX >= r1.x + r1.width) {
-              console.log(prevX + r2.width, ' : ', r1.x, ' || ', prevX, ' : ', r1.x + r1.width)
               // Slide along side of sibling
               if (
                 Math.floor(r1.x) <= Math.floor(prevX + r2.width) &&
@@ -250,7 +324,26 @@ class RectObj extends React.PureComponent {
         if (r2.x + r2.width > r1.x) {
           // If left of target is less than right of sibling
           if (r2.x < r1.x + r1.width) {
-            currTargetCoords.y = r1.y - r2.height
+            if (
+              (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
+              (prevX > r1.x && prevX < r1.x + r1.width)
+            ) {
+              currTargetCoords.y = r1.y - r2.height
+            } else if (prevX + r2.width <= r1.x || prevX >= r1.x + r1.width) {
+              // Slide along side of sibling
+              if (
+                Math.floor(r1.x) <= Math.floor(prevX + r2.width) &&
+                Math.floor(prevX + r2.width) < Math.floor(r1.x + r1.width / 2)
+                // Math.floor(r1.x) === Math.floor(prevX + r2.width)
+              ) {
+                currTargetCoords.x = r1.x - r2.width
+              } else if (
+                Math.floor(r1.x + r1.width / 2) <= Math.floor(prevX) &&
+                Math.floor(prevX) <= Math.floor(r1.x + r1.width)
+              ) {
+                currTargetCoords.x = r1.x + r1.width
+              }
+            }
           }
         }
       }
@@ -261,7 +354,26 @@ class RectObj extends React.PureComponent {
         if (r2.x + r2.width > r1.x) {
           // If left of target is less than right of sibling
           if (r2.x < r1.x + r1.width) {
-            currTargetCoords.y = r1.y + r1.height
+            if (
+              (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
+              (prevX > r1.x && prevX < r1.x + r1.width)
+            ) {
+              currTargetCoords.y = r1.y + r2.height
+            } else if (prevX + r2.width <= r1.x || prevX >= r1.x + r1.width) {
+              // Slide along side of sibling
+              if (
+                Math.floor(r1.x) <= Math.floor(prevX + r2.width) &&
+                Math.floor(prevX + r2.width) < Math.floor(r1.x + r1.width / 2)
+                // Math.floor(r1.x) === Math.floor(prevX + r2.width)
+              ) {
+                currTargetCoords.x = r1.x - r2.width
+              } else if (
+                Math.floor(r1.x + r1.width / 2) <= Math.floor(prevX) &&
+                Math.floor(prevX) <= Math.floor(r1.x + r1.width)
+              ) {
+                currTargetCoords.x = r1.x + r1.width
+              }
+            }
           }
         }
       }
