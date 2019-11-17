@@ -1,7 +1,7 @@
 import React from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Rect } from 'react-konva'
-import { RectObj } from './widgets/rect'
+import { RectObj } from './widgets/rect2'
 
 class Canvas extends React.PureComponent {
   // Component Refs
@@ -114,8 +114,10 @@ class Canvas extends React.PureComponent {
     return (
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer ref={this.layerRef}>
-          {[...Array(2)].map((_, i) => (
-            <RectObj uuid={i} currLayer={this.layerRef} />
+          {[...Array(5)].map((_, i) => (
+            <RectObj uuid={i} currLayer={this.layerRef}>
+              <Rect x={10} y={20} width={50} height={50} fill="red" />
+            </RectObj>
           ))}
         </Layer>
       </Stage>

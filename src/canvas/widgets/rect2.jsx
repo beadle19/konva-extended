@@ -25,14 +25,19 @@ class RectObj extends React.PureComponent {
     let targetRect = target.getClientRect()
     let targetDirection = this.getObjMoveDirection(coordinates)
 
+    // Massage coordinates so we are only ever dealing with whole numbers
+
+    // !!! The above code should probably be moved elsewhere? Maybe modify
+    // !!! the react conva onDragMove function?
+
     targetDirection = targetDirection ? targetDirection : this.state.targetDirection
-    // // // console.log(targetDirection)
+
     /**
      * Iterate through children
      * use for loop for performance optimization
      */
     targetRect = { ...targetRect, ...coordinates }
-    const checkOverlap = focusedRect => {
+    const checkOverlap = (focusedRect, recursive = true) => {
       let newRect = { ...focusedRect }
 
       for (let i = 0; i < siblings.length; i++) {
@@ -40,21 +45,25 @@ class RectObj extends React.PureComponent {
         const currSibRect = currSib.getClientRect()
 
         if (currSib === focusedRect) {
-          // console.log('SAME')
           siblings.splice(i, 1)
           continue
-        }
-
-        if (currSib === focusedRect) {
-          console.log('SAME TO SAME SAMEEE')
         }
 
         const overlap = this.haveIntersection(currSibRect, newRect, targetDirection)
 
         if (!_.isEqual(newRect, overlap)) {
           newRect = { ...newRect, x: overlap.x, y: overlap.y }
-          siblings.splice(i, 1)
-          checkOverlap(newRect)
+          if (recursive) {
+            // Remove the current sibling we just checked so it
+            // isn't checked again
+            siblings.splice(i, 1)
+            const newOverlap = checkOverlap(newRect, false)
+            // If new position has overlap then use original
+            if (!_.isEqual(newRect, newOverlap)) {
+              newRect = { ...newRect, x: this.x, y: this.y }
+            }
+          }
+
           break
         }
       }
@@ -402,7 +411,7 @@ class RectObj extends React.PureComponent {
 
   render() {
     const { originalX, originalY } = this.state
-    const { uuid } = this.props
+    const { uuid, children } = this.props
     return (
       <Rect
         draggable
@@ -416,7 +425,9 @@ class RectObj extends React.PureComponent {
         fill={uuid / 2 === 0 ? 'red' : 'green'}
         onDragStart={this.handleDragStart}
         onDragEnd={this.handleDragEnd}
-      />
+      >
+        {children}
+      </Rect>
     )
   }
 }
