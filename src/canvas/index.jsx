@@ -113,10 +113,25 @@ class Canvas extends React.PureComponent {
   render() {
     return (
       <Stage width={window.innerWidth} height={window.innerHeight}>
-        <Layer ref={this.layerRef}>
-          {[...Array(5)].map((_, i) => (
+        <Layer ref={this.layerRef} width={window.innerWidth} height={window.innerHeight}>
+          {[...Array(2)].map((_, i) => (
             <RectObj uuid={i} currLayer={this.layerRef}>
-              <Rect x={10} y={20} width={50} height={50} fill="red" />
+              <RectObj
+                x={10}
+                y={10}
+                width={50}
+                height={50}
+                fill="yellow"
+                currLayer={this.layerRef}
+              />
+              <RectObj
+                x={80}
+                y={10}
+                width={50}
+                height={50}
+                fill="yellow"
+                currLayer={this.layerRef}
+              />
             </RectObj>
           ))}
         </Layer>

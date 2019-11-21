@@ -1,9 +1,13 @@
 import React from 'react'
-import { Rect } from 'react-konva'
+import { Rect, Group } from 'react-konva'
 import _ from 'lodash'
 
 class RectObj extends React.PureComponent {
+  static comp = 'RectObj'
+
   rectRef = React.createRef()
+
+  rectGroupRef = React.createRef()
 
   constructor(props) {
     super(props)
@@ -17,12 +21,23 @@ class RectObj extends React.PureComponent {
     }
   }
 
-  onDragMove = (coordinates, e) => {
+  onDragMove = coordinates => {
     const rect = this.rectRef
     const target = rect.current
-    const { currLayer } = this.props
-    const siblings = [...currLayer.current.children]
+    const { currLayer, parentRef } = this.props
+    let siblings
+
+    if (parentRef) {
+      siblings = _.filter(parentRef.current.children, child => {
+        return child.nodeType === 'Group'
+      })
+    } else {
+      siblings = [...currLayer.current.children]
+    }
+    // const siblings = [...currLayer.current.children]
     let targetRect = target.getClientRect()
+    const parent =
+      _.get(this, 'props.parentRef.current.attrs') || _.get(this, 'props.currLayer.current.canvas')
     let targetDirection = this.getObjMoveDirection(coordinates)
 
     // Massage coordinates so we are only ever dealing with whole numbers
@@ -37,6 +52,8 @@ class RectObj extends React.PureComponent {
      * use for loop for performance optimization
      */
     targetRect = { ...targetRect, ...coordinates }
+    targetRect = this.keepInBounds(targetRect, parent)
+
     const checkOverlap = (focusedRect, recursive = true) => {
       let newRect = { ...focusedRect }
 
@@ -72,6 +89,9 @@ class RectObj extends React.PureComponent {
         newRect = { ...focusedRect, x: newRect.x, y: newRect.y }
       }
 
+      // Check in bounds parent
+      newRect = this.checkInBounds(targetRect, newRect, parent)
+
       return newRect
     }
 
@@ -84,6 +104,45 @@ class RectObj extends React.PureComponent {
     this.setState({ x: coordinates.x, y: coordinates.y, targetDirection })
 
     return { x: targetRect.x, y: targetRect.y }
+  }
+
+  keepInBounds = (targetRect, bounds) => {
+    const { x, y, width, height } = targetRect
+    const currBounds = { ...bounds }
+    currBounds.x = bounds.x || 0
+    currBounds.y = bounds.y || 0
+    const updatedTarget = { ...targetRect }
+
+    if (x + width > bounds.x + bounds.width) {
+      updatedTarget.x = bounds.x + bounds.width - updatedTarget.width
+    } else if (x < bounds.x) {
+      updatedTarget.x = bounds.x
+    }
+
+    if (y + height > bounds.y + bounds.height) {
+      updatedTarget.y = bounds.y + bounds.height - updatedTarget.height
+    } else if (y < bounds.y) {
+      updatedTarget.y = bounds.y
+    }
+
+    return updatedTarget
+  }
+
+  checkInBounds = (targetRect, newRect, bounds) => {
+    const { x, y, width, height } = newRect
+    bounds.x = bounds.x || 0
+    bounds.y = bounds.y || 0
+    const updatedTarget = { ...newRect }
+
+    if (x + width > bounds.x + bounds.width || x < bounds.x) {
+      updatedTarget.x = this.x
+    }
+
+    if (y + height > bounds.y + bounds.height || y < bounds.y) {
+      updatedTarget.y = this.y
+    }
+
+    return updatedTarget
   }
 
   getObjMoveDirection = newCoordinates => {
@@ -412,22 +471,33 @@ class RectObj extends React.PureComponent {
   render() {
     const { originalX, originalY } = this.state
     const { uuid, children } = this.props
+    const width = this.props.width || 150
+    const height = this.props.height || 100
+    const x = this.props.x || this.x || originalX
+    const y = this.props.y || this.y || originalY
+    console.log('X : ', originalX, ' Y : ', originalY)
+    console.log(this.props.fill)
+
     return (
-      <Rect
-        draggable
-        ref={this.rectRef}
-        dragBoundFunc={this.onDragMove}
-        key={uuid}
-        x={originalX}
-        y={originalY}
-        width={150}
-        height={100}
-        fill={uuid / 2 === 0 ? 'red' : 'green'}
-        onDragStart={this.handleDragStart}
-        onDragEnd={this.handleDragEnd}
-      >
-        {children}
-      </Rect>
+      <Group x={x} y={y} width={width} height={height} ref={this.rectGroupRef}>
+        <Rect
+          draggable
+          ref={this.rectRef}
+          dragBoundFunc={this.onDragMove}
+          key={uuid}
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill={this.props.fill || uuid / 2 === 0 ? 'red' : 'green'}
+          onDragStart={this.handleDragStart}
+          onDragEnd={this.handleDragEnd}
+        />
+        {React.Children.map(children, child =>
+          React.cloneElement(child, { parentRef: this.rectGroupRef }),
+        )}
+        {/* {children} */}
+      </Group>
     )
   }
 }
