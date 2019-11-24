@@ -61,7 +61,7 @@ class RectObj extends React.PureComponent {
         const currSib = siblings[i]
         const currSibRect = currSib.getClientRect()
 
-        if (currSib === focusedRect) {
+        if (currSib === focusedRect || currSib.attrs === focusedRect) {
           siblings.splice(i, 1)
           continue
         }
@@ -101,7 +101,8 @@ class RectObj extends React.PureComponent {
     // direction of element
     this.x = targetRect.x
     this.y = targetRect.y
-    this.setState({ x: coordinates.x, y: coordinates.y, targetDirection })
+
+    this.setState({ x: targetRect.x, y: targetRect.y, targetDirection })
 
     return { x: targetRect.x, y: targetRect.y }
   }
@@ -190,19 +191,17 @@ class RectObj extends React.PureComponent {
     // const { x: prevX, y: prevY } = this.state
     const { x: prevX } = this
     const { y: prevY } = this
-    // console.log(targetDirection)
+
     // X-axis overlap computation
-    // // // console.log('STILL : ', r1.x, ' : ', r1.x + r1.width)
-    // // // console.log('TARGET : ', r2.x, ' : ', r2.x + r2.width)
 
     // If target is moving in the left direction
     if (targetDirection === 'left') {
       // If left of target is inbetween right and left of sibling
-      if (r2.x < r1.x + r1.width && r2.x > r1.x) {
+      if (r2.x <= r1.x + r1.width && r2.x >= r1.x) {
         // And if bottom of target is greater than top of sibling
-        if (r2.y + r2.height > r1.y) {
+        if (r2.y + r2.height >= r1.y) {
           // And if top of target is less than bottom of sibling
-          if (r2.y < r1.y + r1.height) {
+          if (r2.y <= r1.y + r1.height) {
             if (
               (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
               (prevY > r1.y && prevY < r1.y + r1.height)
@@ -230,13 +229,13 @@ class RectObj extends React.PureComponent {
       // If right of target is inbetween left and right of sibling
       if (
         // targetDirection === 'right' &&
-        r2.x + r2.width > r1.x &&
-        r2.x + r2.height < r1.x + r1.width
+        r2.x + r2.width >= r1.x &&
+        r2.x + r2.height <= r1.x + r1.width
       ) {
         // If bottom of target is greater than top of sibling
-        if (r2.y + r2.height > r1.y) {
+        if (r2.y + r2.height >= r1.y) {
           // And if top of target is less than bottom of sibling
-          if (r2.y < r1.y + r1.height) {
+          if (r2.y <= r1.y + r1.height) {
             if (
               (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
               (prevY > r1.y && prevY < r1.y + r1.height)
@@ -267,13 +266,13 @@ class RectObj extends React.PureComponent {
       // If right of target is inbetween left and right of sibling
       if (
         // targetDirection === 'right' &&
-        r2.x + r2.width > r1.x &&
-        r2.x + r2.height < r1.x + r1.width
+        r2.x + r2.width >= r1.x &&
+        r2.x + r2.height <= r1.x + r1.width
       ) {
         // If bottom of target is greater than top of sibling
-        if (r2.y + r2.height > r1.y) {
+        if (r2.y + r2.height >= r1.y) {
           // And if top of target is less than bottom of sibling
-          if (r2.y < r1.y + r1.height) {
+          if (r2.y <= r1.y + r1.height) {
             if (
               (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
               (prevY > r1.y && prevY < r1.y + r1.height)
@@ -298,11 +297,11 @@ class RectObj extends React.PureComponent {
         }
       }
 
-      if (r2.x < r1.x + r1.width && r2.x > r1.x) {
+      if (r2.x <= r1.x + r1.width && r2.x >= r1.x) {
         // And if bottom of target is greater than top of sibling
-        if (r2.y + r2.height > r1.y) {
+        if (r2.y + r2.height >= r1.y) {
           // And if top of target is less than bottom of sibling
-          if (r2.y < r1.y + r1.height) {
+          if (r2.y <= r1.y + r1.height) {
             if (
               (prevY + r2.height > r1.y && prevY + r2.height < r1.y + r1.height) ||
               (prevY > r1.y && prevY < r1.y + r1.height)
@@ -333,11 +332,11 @@ class RectObj extends React.PureComponent {
     // If target is moving in the up direction
     if (targetDirection === 'up') {
       // If top of target is inbetween bottom and top of sibling
-      if (r2.y < r1.y + r1.height && r2.y > r1.y) {
+      if (r2.y <= r1.y + r1.height && r2.y >= r1.y) {
         // If right of target is greater than left of sibling
-        if (r2.x + r2.width > r1.x) {
+        if (r2.x + r2.width >= r1.x) {
           // If left of target is less than right of sibling
-          if (r2.x < r1.x + r1.width) {
+          if (r2.x <= r1.x + r1.width) {
             // If right of target is greater than left of sibling
             // and left of target is less than right of sibling
             if (
@@ -366,13 +365,13 @@ class RectObj extends React.PureComponent {
 
       if (
         // targetDirection === 'bottom' &&
-        r2.y + r2.height > r1.y &&
-        r2.y + r2.height < r1.y + r1.height
+        r2.y + r2.height >= r1.y &&
+        r2.y + r2.height <= r1.y + r1.height
       ) {
         // If right of target is greater than left of sibling
-        if (r2.x + r2.width > r1.x) {
+        if (r2.x + r2.width >= r1.x) {
           // If left of target is less than right of sibling
-          if (r2.x < r1.x + r1.width) {
+          if (r2.x <= r1.x + r1.width) {
             if (
               (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
               (prevX > r1.x && prevX < r1.x + r1.width)
@@ -403,13 +402,13 @@ class RectObj extends React.PureComponent {
     if (targetDirection === 'down') {
       if (
         // targetDirection === 'bottom' &&
-        r2.y + r2.height > r1.y &&
-        r2.y + r2.height < r1.y + r1.height
+        r2.y + r2.height >= r1.y &&
+        r2.y + r2.height <= r1.y + r1.height
       ) {
         // If right of target is greater than left of sibling
-        if (r2.x + r2.width > r1.x) {
+        if (r2.x + r2.width >= r1.x) {
           // If left of target is less than right of sibling
-          if (r2.x < r1.x + r1.width) {
+          if (r2.x <= r1.x + r1.width) {
             if (
               (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
               (prevX > r1.x && prevX < r1.x + r1.width)
@@ -435,11 +434,11 @@ class RectObj extends React.PureComponent {
       }
 
       // If top of target is inbetween bottom and top of sibling
-      if (r2.y < r1.y + r1.height && r2.y > r1.y) {
+      if (r2.y <= r1.y + r1.height && r2.y >= r1.y) {
         // If right of target is greater than left of sibling
-        if (r2.x + r2.width > r1.x) {
+        if (r2.x + r2.width >= r1.x) {
           // If left of target is less than right of sibling
-          if (r2.x < r1.x + r1.width) {
+          if (r2.x <= r1.x + r1.width) {
             if (
               (prevX + r2.width > r1.x && prevX + r2.width < r1.x + r1.width) ||
               (prevX > r1.x && prevX < r1.x + r1.width)
@@ -464,7 +463,6 @@ class RectObj extends React.PureComponent {
         }
       }
     }
-    // console.log('new coords : ', currTargetCoords.x, ' : ', r1.x + r1.width, ' ::: ', r1.x)
     return currTargetCoords
   }
 
@@ -473,10 +471,14 @@ class RectObj extends React.PureComponent {
     const { uuid, children } = this.props
     const width = this.props.width || 150
     const height = this.props.height || 100
-    const x = this.props.x || this.x || originalX
-    const y = this.props.y || this.y || originalY
-    console.log('X : ', originalX, ' Y : ', originalY)
-    console.log(this.props.fill)
+    // const x = this.props.x || this.x || originalX
+
+    // !! MAYBE FIND AN ALTERNATIVE TO TERNARY
+    const x = this.props.x !== undefined ? this.props.x : this.x !== undefined ? this.x : originalX
+    // const y = this.props.y || this.y || originalY
+
+    // !! MAYBE FIND AN ALTERNATIVE TO TERNARY
+    const y = this.props.y !== undefined ? this.props.y : this.y !== undefined ? this.y : originalY
 
     return (
       <Group x={x} y={y} width={width} height={height} ref={this.rectGroupRef}>
@@ -489,14 +491,13 @@ class RectObj extends React.PureComponent {
           y={0}
           width={width}
           height={height}
-          fill={this.props.fill || uuid / 2 === 0 ? 'red' : 'green'}
+          fill={this.props.fill}
           onDragStart={this.handleDragStart}
           onDragEnd={this.handleDragEnd}
         />
         {React.Children.map(children, child =>
           React.cloneElement(child, { parentRef: this.rectGroupRef }),
         )}
-        {/* {children} */}
       </Group>
     )
   }

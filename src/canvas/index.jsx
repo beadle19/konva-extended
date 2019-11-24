@@ -114,14 +114,21 @@ class Canvas extends React.PureComponent {
     return (
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer ref={this.layerRef} width={window.innerWidth} height={window.innerHeight}>
-          {[...Array(2)].map((_, i) => (
-            <RectObj uuid={i} currLayer={this.layerRef}>
+          {[...Array(1)].map((_, i) => (
+            <RectObj
+              uuid={i}
+              currLayer={this.layerRef}
+              key={i}
+              fill={i / 2 === 0 ? 'purple' : 'green'}
+              nestedRect="NOTNESTED"
+            >
               <RectObj
                 x={10}
                 y={10}
                 width={50}
                 height={50}
                 fill="yellow"
+                nestedRect="nestedRect"
                 currLayer={this.layerRef}
               />
               <RectObj
@@ -130,6 +137,7 @@ class Canvas extends React.PureComponent {
                 width={50}
                 height={50}
                 fill="yellow"
+                nestedRect="nestedRect"
                 currLayer={this.layerRef}
               />
             </RectObj>
