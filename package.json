@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "konva": "^4.0.16",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-konva": "^16.10.1-0",
